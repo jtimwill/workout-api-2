@@ -11,6 +11,7 @@ const ExerciseModel = require('./models/exercise');
 const MuscleModel = require('./models/muscle');
 const TargetExerciseModel = require('./models/target_exercise');
 const WorkoutModel = require('./models/workout');
+const WorkoutExerciseModel = require('./models/workout_exercise');
 
 // Create sequelize instance
 if (process.env.NODE_ENV === 'production') {
@@ -33,6 +34,7 @@ const Exercise = ExerciseModel(sequelize, Sequelize);
 const Muscle = MuscleModel(sequelize, Sequelize);
 const TargetExercise = TargetExerciseModel(sequelize, Sequelize);
 const Workout = WorkoutModel(sequelize, Sequelize);
+const WorkoutExercise = WorkoutExerciseModel(sequelize, Sequelize);
 
 // Create associations between models
 User.hasMany(Workout, { foreignKey: {allowNull: false }});
@@ -53,7 +55,7 @@ CompletedWorkout.hasMany(CompletedExercise, {
 Muscle.hasMany(Exercise, { foreignKey: {allowNull: false }});
 Exercise.hasMany(CompletedExercise, { foreignKey: {allowNull: false }});
 Exercise.hasMany(TargetExercise, { foreignKey: {allowNull: false }});
-Exercise.hasMany(OrderProduct, {foreignKey: {allowNull: false }});
+Exercise.hasMany(WorkoutExercise, {foreignKey: {allowNull: false }});
 
 // Create database tables
 sequelize.sync().then(() => {
