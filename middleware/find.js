@@ -14,7 +14,7 @@ async function findExercise(req, res, next) {
   if (!exercise) {
     return res.status(400).send('Invalid Exercise');
   }
-  
+
   req.exercise = exercise;
   next();
 }
@@ -23,7 +23,7 @@ async function findWorkout(req, res, next) {
   const workout = await Workout.findOne({ where: { id: req.body.workoutId }});
   if (!workout) {
     return res.status(400).send('Invalid Workout');
-  } else if (req.user._id !== (workout.user_id).toString()) {
+  } else if (req.user.id !== (workout.userId).toString()) {
     return res.status(403).send('Forbidden');
   }
 
@@ -35,7 +35,7 @@ async function findCompletedWorkout(req, res, next) {
   const completed_workout = await CompletedWorkout.findOne({ where: { id: req.body.completedWorkoutId }});
   if (!completed_workout) {
     return res.status(400).send('Invalid Completed Workout');
-  } else if (req.user._id !== (completed_workout.user_id).toString()) {
+  } else if (req.user.id !== (completed_workout.userId).toString()) {
     return res.status(403).send('Forbidden');
   }
 

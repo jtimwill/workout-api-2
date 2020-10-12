@@ -42,11 +42,7 @@ router.post('/', async (req, res) => {
 router.get('/me', auth, async (req, res) => {
   const user = await User.findOne({
     where: { id: req.user.id},
-    attributes: { exclude: ['password_digest', 'created_at', 'updated_at'] },
-    include: [
-      { model: Review, where: { userId: req.user.id }, required: false },
-    ]
-  });
+    attributes: { exclude: ['password_digest', 'created_at', 'updated_at'] }});
   res.send(user);
 });
 

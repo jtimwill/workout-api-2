@@ -23,7 +23,7 @@ router.post('/', [auth, admin, findMuscle], async (req, res) => {
   try {
     const exercise = await Exercise.create({
       name: req.body.name,
-      muscleId: req.body.muscle.id
+      muscleId: req.body.muscleId
     });
     res.send(exercise);
   } catch (err) {
@@ -39,7 +39,7 @@ router.put('/:id', [auth, admin, findMuscle], async (req, res) => {
   try {
     const updated_exercise = await exercise.update({
       name: req.body.name,
-      muscleId: req.body.muscle.id
+      muscleId: req.body.muscleId
     });
     res.send(updated_exercise);
   } catch(err) {
@@ -52,7 +52,7 @@ router.delete('/:id', [auth, admin], async (req, res) => {
   if (!exercise) {
     res.status(404).send('Exercise with submitted ID not found');
   } else {
-    await muscle.destroy();
+    await exercise.destroy();
     res.send(exercise);
   }
 });
