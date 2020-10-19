@@ -7,9 +7,10 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true
     },
     date: {
-      type: DataTypes.DATEONLY,
-      unique: true,
-      allowNull: false
+      type: DataTypes.DATE,
+      // unique: true,
+      allowNull: false,
+      // defaultValue: Date.now
     }
   }, {});
 };

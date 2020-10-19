@@ -22,6 +22,8 @@ router.post('/', auth, async (req, res) => {
   try {
     const completed_workout = await CompletedWorkout.create({
       userId: req.user.id,
+      date: req.body.date,
+      workoutId: req.body.workoutId
     });
     res.send(completed_workout);
   } catch (err) {
@@ -54,12 +56,17 @@ router.put('/:id', auth, async (req, res) => {
   let completed_workout = await CompletedWorkout.findOne({ where: { id: req.params.id } });
   if (!completed_workout) {
     return res.status(404).send('Completed Workout with submitted ID not found');
+  } else {
+    if (req.user.id !== completed_workout.userId) {
+      return res.status(403).send('Forbidden');
+    }
   }
 
   try {
     const updated_completed_workout = await completed_workout.update({
-      userId: req.body.userId,
-      date: req.body.date
+      userId: req.user.id,
+      date: req.body.date,
+      workoutId: req.body.workoutId
     });
     res.send(updated_completed_workout);
   } catch(err) {
@@ -72,8 +79,12 @@ router.delete('/:id', auth, async (req, res) => {
   if (!completed_workout) {
     res.status(404).send('Completed Workout ID not found');
   } else {
-    await completed_workout.destroy(); // Auto-deletes completed_exercises
-    res.send(completed_workout);
+    if (req.user.id !== completed_workout.userId) {
+      return res.status(403).send('Forbidden');
+    } else {
+      await completed_workout.destroy(); // Auto-deletes completed_exercises
+      res.send(completed_workout);
+    }
   }
 });
 

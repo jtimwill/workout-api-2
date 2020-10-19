@@ -9,7 +9,8 @@ module.exports = function(sequelize, DataTypes) {
     name: {
       type: DataTypes.STRING,
       unique: true,
-      allowNull: false
+      allowNull: false,
+      max: 50,
     }
   }, {});
 };

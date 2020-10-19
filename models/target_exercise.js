@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     exercise_type: {
       type: DataTypes.STRING,
       allowNull: false,
+      isIn: [['bodyweight', 'free weight', 'cable', 'machine']]
     },
     unilateral: {
       type: DataTypes.BOOLEAN,
@@ -16,15 +17,18 @@ module.exports = function(sequelize, DataTypes) {
     },
     sets: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      min: 1
     },
     reps: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      min: 1
     },
     load: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     }
   }, {});
 };
