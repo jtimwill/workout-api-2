@@ -55,11 +55,15 @@ router.put('/:id', auth, async (req, res) => {
   let workout = await Workout.findOne({ where: { id: req.params.id } });
   if (!workout) {
     return res.status(404).send('Workout with submitted ID not found');
+  } else {
+      if (req.user.id !== workout.userId) {
+        return res.status(403).send('Forbidden');
+      }
   }
 
   try {
     const updated_workout = await workout.update({
-      userId: req.body.userId,
+      userId: req.user.id,
       name: req.body.name
     });
     res.send(updated_workout);
@@ -73,8 +77,12 @@ router.delete('/:id', auth, async (req, res) => {
   if (!workout) {
     res.status(404).send('Workout ID not found');
   } else {
-    await workout.destroy(); // Auto-deletes target_exercises
-    res.send(workout);
+    if (req.user.id !== workout.userId) {
+      return res.status(403).send('Forbidden');
+    } else {
+      await workout.destroy(); // Auto-deletes target_exercises
+      res.send(workout);
+    }
   }
 });
 
