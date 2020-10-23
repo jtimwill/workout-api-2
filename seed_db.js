@@ -5,7 +5,7 @@ const {   User,
           Muscle,
           TargetExercise,
           Workout,
-          WorkoutExercise
+          WorkoutExercise,
           sequelize } = require('./sequelize');
 const bcrypt = require('bcrypt');
 const config = require('config');
@@ -21,28 +21,28 @@ const config = require('config');
     const admin = await User.create({
       username: 'admin',
       email: 'admin@example.com',
-      password_digest: '123456',
+      password_digest: password_digest,
       admin: true
     });
     // Create User1
     const user_1 = await User.create({
       username: 'adam',
       email: 'adam@example.com',
-      password_digest: '123456',
+      password_digest: password_digest,
       admin: false
     });
     // Create User2
     const user_2 = await User.create({
       username: 'bob',
       email: 'bob@example.com',
-      password_digest: '123456',
+      password_digest: password_digest,
       admin: false
     });
     // Create User3
     const user_3 = await User.create({
       username: 'mary',
       email: 'mary@example.com',
-      password_digest: '123456',
+      password_digest: password_digest,
       admin: false
     });
 
@@ -77,6 +77,7 @@ const config = require('config');
     const back_forearms = await Muscle.create({ name: "back-forearms" });
 
     const quad_exercises = [
+      "paused back squat",
       "back squat",
       "front squat",
       "jump squat",
@@ -130,7 +131,7 @@ const config = require('config');
     ];
     const ab_exercises = [ "crunch" ];
     const front_neck_exercises = [ "neck curl" ];
-    const upper_trap_exercises = [ "neck extension" ];
+    const upper_trap_exercises = [ "neck extension", "shrug" ];
     const glute_exercises = [ "bench hip thrust", "hip thrust" ];
 
     exercise_items(quad_exercises, quadriceps);
@@ -148,80 +149,297 @@ const config = require('config');
     exercise_items(upper_trap_exercises, upper_trapezius);
     exercise_items(glute_exercises, glutes);
 
-    // YAH***
-    await Exercise.collection.insertMany(collection);
+    await Exercise.bulkCreate(collection);
 
-    const salt = await bcrypt.genSalt(10);
-    const password_digest = await bcrypt.hash("123456", salt);
-    const user = await new User({ name: "Adam", email: "adam@example.com", password_digest }).save();
-    const back_squat = await Exercise.findOne({name: 'back squat'});
-    const flat_bench_press = await Exercise.findOne({name: 'flat bench press'});
-    const chin_up = await Exercise.findOne({name: 'chin up'});
-    const lateral_raise = await Exercise.findOne({name: 'lateral raise'});
-    const leg_curl = await Exercise.findOne({name: 'leg curl'});
+    const incline_bench_press = await Exercise.findOne({ where: { name: 'incline bench press' }});
+    const standing_overhead_press = await Exercise.findOne({ where: { name: 'standing overhead press' }});
+    const triceps_extension = await Exercise.findOne({ where: { name: 'triceps extension' }});
+    const lateral_raise = await Exercise.findOne({ where: { name: 'lateral raise' }});
+    const chest_fly = await Exercise.findOne({ where: { name: 'chest fly' }});
+    const back_squat = await Exercise.findOne({ where: { name: 'back squat' }});
+
+    const bent_over_row = await Exercise.findOne({ where: { name: 'bent-over row' }});
+    const reverse_fly = await Exercise.findOne({ where: { name: 'reverse fly' }});
+    const bicep_curl = await Exercise.findOne({ where: { name: 'bicep curl' }});
+    const leg_curl = await Exercise.findOne({ where: { name: 'leg curl' }});
+    const pull_up = await Exercise.findOne({ where: { name: 'pull up' }});
+    const shrug = await Exercise.findOne({ where: { name: 'shrug' }});
+
+    let push_workout = await Workout.create({ name: "Push", userId: user_1.id });
+    let pull_workout = await Workout.create({ name: "Pull", userId: user_1.id });
+
+    await TargetExercise.create({
+      exerciseId: incline_bench_press.id,
+      workoutId: push_workout.id,
+      exercise_type: 'free weight',
+      unilateral: false,
+      sets: 4,
+      reps: 12,
+      load: 135,
+    });
+    await TargetExercise.create({
+      exerciseId: standing_overhead_press.id,
+      workoutId: push_workout.id,
+      exercise_type: 'free weight',
+      unilateral: false,
+      sets: 4,
+      reps: 12,
+      load: 95,
+    });
+    await TargetExercise.create({
+      exerciseId: triceps_extension.id,
+      workoutId: push_workout.id,
+      exercise_type: 'cable',
+      unilateral: false,
+      sets: 4,
+      reps: 15,
+      load: 57.5,
+    });
+    await TargetExercise.create({
+      exerciseId: lateral_raise.id,
+      workoutId: push_workout.id,
+      exercise_type: 'cable',
+      unilateral: true,
+      sets: 4,
+      reps: 15,
+      load: 12.5,
+    });
+    await TargetExercise.create({
+      exerciseId: lateral_raise.id,
+      workoutId: push_workout.id,
+      exercise_type: 'machine',
+      unilateral: false,
+      sets: 4,
+      reps: 15,
+      load: 50,
+    });
+    await TargetExercise.create({
+      exerciseId: back_squat.id,
+      workoutId: push_workout.id,
+      exercise_type: 'free weight',
+      unilateral: false,
+      sets: 5,
+      reps: 5,
+      load: 225,
+    });
+    await TargetExercise.create({
+      exerciseId: chest_fly.id,
+      workoutId: push_workout.id,
+      exercise_type: 'machine',
+      unilateral: false,
+      sets: 4,
+      reps: 12,
+      load: 165,
+    });
+
+    await TargetExercise.create({
+      exerciseId: bent_over_row.id,
+      workoutId: pull_workout.id,
+      exercise_type: 'machine',
+      unilateral: false,
+      sets: 4,
+      reps: 12,
+      load: 90,
+    });
+    await TargetExercise.create({
+      exerciseId: reverse_fly.id,
+      workoutId: pull_workout.id,
+      exercise_type: 'machine',
+      unilateral: false,
+      sets: 4,
+      reps: 12,
+      load: 115,
+    });
+    await TargetExercise.create({
+      exerciseId: bicep_curl.id,
+      workoutId: pull_workout.id,
+      exercise_type: 'cable',
+      unilateral: false,
+      sets: 4,
+      reps: 15,
+      load: 47.5,
+    });
+    await TargetExercise.create({
+      exerciseId: bicep_curl.id,
+      workoutId: pull_workout.id,
+      exercise_type: 'free weight',
+      unilateral: false,
+      sets: 4,
+      reps: 15,
+      load: 50,
+    });
+    await TargetExercise.create({
+      exerciseId: leg_curl.id,
+      workoutId: pull_workout.id,
+      exercise_type: 'machine',
+      unilateral: false,
+      sets: 4,
+      reps: 10,
+      load: 115,
+    });
+    await TargetExercise.create({
+      exerciseId: pull_up.id,
+      workoutId: pull_workout.id,
+      exercise_type: 'bodyweight',
+      unilateral: false,
+      sets: 4,
+      reps: 12,
+      load: 0,
+    });
+    await TargetExercise.create({
+      exerciseId: shrug.id,
+      workoutId: pull_workout.id,
+      exercise_type: 'free weight',
+      unilateral: false,
+      sets: 4,
+      reps: 15,
+      load: 185,
+    });
 
     for (let i = 1; i < 32; i++) {
-      let workout = await new Workout({ date: new Date(`October ${i}, 2018`), user_id: user._id }).save();
+      if (i % 2 == 0) {
+        let completed_workout1 = await CompletedWorkout.create({
+          date: new Date(`November ${i}, 2020`),
+          userId: user_1.id,
+          workoutId: push_workout.id
+        });
 
-      await new CompletedExercise({
-        exercise_id: back_squat._id,
-        workout_id: workout._id,
-        exercise_type: 'free weight',
-        unilateral: false,
-        sets: 5,
-        reps: 5,
-        load: 225,
-        mum: false
-      }).save();
+        await CompletedExercise.create({
+          exerciseId: incline_bench_press.id,
+          completedWorkoutId: completed_workout1.id,
+          exercise_type: 'free weight',
+          unilateral: false,
+          sets: 4,
+          reps: 12,
+          load: 135,
+        });
+        await CompletedExercise.create({
+          exerciseId: standing_overhead_press.id,
+          completedWorkoutId: completed_workout1.id,
+          exercise_type: 'free weight',
+          unilateral: false,
+          sets: 4,
+          reps: 12,
+          load: 95,
+        });
+        await CompletedExercise.create({
+          exerciseId: triceps_extension.id,
+          completedWorkoutId: completed_workout1.id,
+          exercise_type: 'cable',
+          unilateral: false,
+          sets: 4,
+          reps: 15,
+          load: 57.5,
+        });
+        await CompletedExercise.create({
+          exerciseId: lateral_raise.id,
+          completedWorkoutId: completed_workout1.id,
+          exercise_type: 'cable',
+          unilateral: true,
+          sets: 4,
+          reps: 15,
+          load: 12.5,
+        });
+        await CompletedExercise.create({
+          exerciseId: lateral_raise.id,
+          completedWorkoutId: completed_workout1.id,
+          exercise_type: 'machine',
+          unilateral: false,
+          sets: 4,
+          reps: 15,
+          load: 50,
+        });
+        await CompletedExercise.create({
+          exerciseId: back_squat.id,
+          completedWorkoutId: completed_workout1.id,
+          exercise_type: 'free weight',
+          unilateral: false,
+          sets: 5,
+          reps: 5,
+          load: 225,
+        });
+        await CompletedExercise.create({
+          exerciseId: chest_fly.id,
+          completedWorkoutId: completed_workout1.id,
+          exercise_type: 'machine',
+          unilateral: false,
+          sets: 4,
+          reps: 12,
+          load: 165,
+        });
 
-      await new CompletedExercise({
-        exercise_id: flat_bench_press._id,
-        workout_id: workout._id,
-        exercise_type: 'free weight',
-        unilateral: false,
-        sets: 4,
-        reps: 8,
-        load: 185,
-        mum: true
-      }).save();
+      } else {
+        let completed_workout2 = await CompletedWorkout.create({
+          date: new Date(`November ${i}, 2020`),
+          userId: user_1.id,
+          workoutId: pull_workout.id
+        });
 
-      await new CompletedExercise({
-        exercise_id: chin_up._id,
-        workout_id: workout._id,
-        exercise_type: 'bodyweight',
-        unilateral: false,
-        sets: 4,
-        reps: 8,
-        load: 0,
-        mum: false
-      }).save();
-
-      await new CompletedExercise({
-        exercise_id: lateral_raise._id,
-        workout_id: workout._id,
-        exercise_type: 'cable',
-        unilateral: false,
-        sets: 4,
-        reps: 10,
-        load: 12,
-        mum: false
-      }).save();
-
-      await new CompletedExercise({
-        exercise_id: leg_curl._id,
-        workout_id: workout._id,
-        exercise_type: 'machine',
-        unilateral: true,
-        sets: 4,
-        reps: 10,
-        load: 75,
-        mum: false
-      }).save();
+        await CompletedExercise.create({
+          exerciseId: bent_over_row.id,
+          completedWorkoutId: completed_workout2.id,
+          exercise_type: 'machine',
+          unilateral: false,
+          sets: 4,
+          reps: 12,
+          load: 90,
+        });
+        await CompletedExercise.create({
+          exerciseId: reverse_fly.id,
+          completedWorkoutId: completed_workout2.id,
+          exercise_type: 'machine',
+          unilateral: false,
+          sets: 4,
+          reps: 12,
+          load: 115,
+        });
+        await CompletedExercise.create({
+          exerciseId: bicep_curl.id,
+          completedWorkoutId: completed_workout2.id,
+          exercise_type: 'cable',
+          unilateral: false,
+          sets: 4,
+          reps: 15,
+          load: 47.5,
+        });
+        await CompletedExercise.create({
+          exerciseId: bicep_curl.id,
+          completedWorkoutId: completed_workout2.id,
+          exercise_type: 'free weight',
+          unilateral: false,
+          sets: 4,
+          reps: 15,
+          load: 50,
+        });
+        await CompletedExercise.create({
+          exerciseId: leg_curl.id,
+          completedWorkoutId: completed_workout2.id,
+          exercise_type: 'machine',
+          unilateral: false,
+          sets: 4,
+          reps: 10,
+          load: 115,
+        });
+        await CompletedExercise.create({
+          exerciseId: pull_up.id,
+          completedWorkoutId: completed_workout2.id,
+          exercise_type: 'bodyweight',
+          unilateral: false,
+          sets: 4,
+          reps: 12,
+          load: 0,
+        });
+        await CompletedExercise.create({
+          exerciseId: shrug.id,
+          completedWorkoutId: completed_workout2.id,
+          exercise_type: 'free weight',
+          unilateral: false,
+          sets: 4,
+          reps: 15,
+          load: 185,
+        });
+      }
     }
-
-    mongoose.connection.close();
-
-
 
     console.log("Success!");
   } catch(err) {

@@ -97,11 +97,11 @@ Additional resources that helped me:
 ### TargetExercises Resource
 |URL|HTTP verb|Result|Include JWT?|Admin only?|
 |---|---|---|---|---|
-/api/workouts/:workoutId/target_exercises|POST|create a new target exercise for workout|Yes|No|
-/api/workouts/:workoutId/target_exercises|GET|return all target exercises for workout|Yes|No|
-/api/workouts/:workoutId/target_exercises/:id|GET|return a specific target exercise|Yes|No|
-/api/workouts/:workoutId/target_exercises/:id|PUT|update a specific target exercise|Yes|No|
-/api/workouts/:workoutId/target_exercises/:id|DELETE|delete a specific target exercises|Yes|No|
+/api/workouts/:wid/target_exercises|POST|create a new target exercise for workout|Yes|No|
+/api/workouts/:wid/target_exercises|GET|return all target exercises for workout|Yes|No|
+/api/workouts/:wid/target_exercises/:id|GET|return a specific target exercise|Yes|No|
+/api/workouts/:wid/target_exercises/:id|PUT|update a specific target exercise|Yes|No|
+/api/workouts/:wid/target_exercises/:id|DELETE|delete a specific target exercises|Yes|No|
 
 ### Exercises Resource
 |URL|HTTP verb|Result|Include JWT?|Admin only?|
@@ -133,11 +133,11 @@ Additional resources that helped me:
 ### Completed Exercises Resource
 |URL|HTTP verb|Result|Include JWT?|Admin only?|
 |---|---|---|---|---|
-/api/completed_workouts/:completedWorkoutId/target_exercises|POST|create a new target exercise for workout|Yes|No|
-/api/completed_workouts/:completedWorkoutId/target_exercises|GET|return all target exercises for workout|Yes|No|
-/api/completed_workouts/:completedWorkoutId/target_exercises/:id|GET|return a specific target exercise|Yes|No|
-/api/completed_workouts/:completedWorkoutId/target_exercises/:id|PUT|update a specific target exercise|Yes|No|
-/api/completed_workouts/:completedWorkoutId/target_exercises/:id|DELETE|delete a specific target exercises|Yes|No|
+/api/completed_workouts/:cwid/target_exercises|POST|create a new target exercise for workout|Yes|No|
+/api/completed_workouts/:cwid/target_exercises|GET|return all target exercises for workout|Yes|No|
+/api/completed_workouts/:cwid/target_exercises/:id|GET|return a specific target exercise|Yes|No|
+/api/completed_workouts/:cwid/target_exercises/:id|PUT|update a specific target exercise|Yes|No|
+/api/completed_workouts/:cwid/target_exercises/:id|DELETE|delete a specific target exercises|Yes|No|
 
 ### Login Resource
 |URL|HTTP verb|Result|Include JWT?|Admin only?|
