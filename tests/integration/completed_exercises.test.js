@@ -10,7 +10,7 @@ const server = require('../../index');
 const request = require('supertest')(server);
 const createJWT = require('../../utilities/tokenUtility');
 
-describe('/api/workouts', () => {
+describe('/api/completed_exercises', () => {
   afterEach(async () => {
     await Muscle.destroy({ where: {} });
     await Workout.destroy({ where: {} });
