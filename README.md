@@ -67,12 +67,12 @@ Additional resources that helped me:
 
 ## App Structure
 <p align="center">
-  <img alt="Image of App Structure" src="https://raw.github.com/jtimwill/store-api/master/images/workout-api-diagram.png" />
+  <img alt="Image of App Structure" src="https://raw.githubusercontent.com/jtimwill/workout-api-2/master/images/workout-api-diagram.png" />
 </p>
 
 ## Entity Relationship Diagram
 <p align="center">
-  <img alt="Image of ERD" src="https://raw.github.com/jtimwill/store-api/master/images/workout-erd.png"/>
+  <img alt="Image of ERD" src="https://raw.githubusercontent.com/jtimwill/workout-api-2/master/images/workout-erd.png"/>
 </p>
 
 ## Routes and Resources
