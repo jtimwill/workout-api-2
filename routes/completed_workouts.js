@@ -19,12 +19,36 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
+  const workout = await Workout.findOne({
+    where: { id: req.body.workoutId },
+    include: {
+      model: TargetExercise,
+      where: { workoutId: req.body.workoutId },
+      required: false
+    }
+  });
+
+  if (!workout) {
+    return res.status(400).send('Invalid Workout');
+  }
+
   try {
     const completed_workout = await CompletedWorkout.create({
       userId: req.user.id,
       date: req.body.date,
       workoutId: req.body.workoutId
     });
+    const completed_workouts = [];
+    for(let te of workout.target_exercises) {
+      completed_workouts.push({
+        exerciseId: te.exerciseId,
+        exercise_type: te.exercise_type,
+        sets: 0,
+        reps: 0,
+        completedWorkoutId: completed_workout.id
+      });
+    }
+    await CompletedExercise.bulkCreate(completed_workouts);
     res.send(completed_workout);
   } catch (err) {
     res.status(400).send(err);

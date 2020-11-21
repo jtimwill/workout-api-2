@@ -4,6 +4,7 @@ const { Muscle,
         User,
         Exercise,
         CompletedExercise,
+        TargetExercise,
         sequelize
       } = require('../../sequelize');
 const server = require('../../index');
@@ -18,6 +19,7 @@ describe('/api/completed_workouts', () => {
     await User.destroy({ where: {} });
     await Exercise.destroy({ where: {} });
     await CompletedExercise.destroy({ where: {} });
+    await TargetExercise.destroy({ where: {} });
   });
 
   afterAll(async () => {
@@ -110,7 +112,7 @@ describe('/api/completed_workouts', () => {
   });
 
   describe('POST /', () => {
-    let user, token, completed_workout_object, custom_date, workout;
+    let user, token, completed_workout_object, custom_date, workout, muscle, exercise;
 
     const response = async (object, jwt) => {
       return await request
@@ -124,11 +126,17 @@ describe('/api/completed_workouts', () => {
       token = createJWT(user);
       custom_date = new Date(2019, 10);
       workout = await Workout.create({ userId: user.id, name: 'Isometric' });
+      muscle = await Muscle.create({ name: 'chest' });
+      exercise = await Exercise.create({ name: 'chest fly' , muscleId: muscle.id });
       completed_workout_object = {
         date: new Date('September 27, 2019 00:00:00'),
         userId: user.id,
         workoutId: workout.id
       };
+
+      await TargetExercise.bulkCreate([
+        { exerciseId: exercise.id, exercise_type: 'cable', sets: 4, reps: 8, workoutId: workout.id },
+      ]);
     });
 
     it('should return 401 if client not logged in', async () => {
@@ -139,19 +147,34 @@ describe('/api/completed_workouts', () => {
     });
 
     it('should return 400 if completed workout is invalid', async () => {
-      completed_workout_object = { date: "asdfa" };
+      completed_workout_object = { workoutId: workout.id };
       const res = await response(completed_workout_object, token);
 
       expect(res.status).toBe(400);
     });
 
-    it('should save workout if completed workout is valid', async () => {
+    it('should return 500 if workout is invalid', async () => {
+      completed_workout_object = {};
+      const res = await response(completed_workout_object, token);
+
+      expect(res.status).toBe(500);
+    });
+
+    it('should save workout if completed workout is valid with associated exercises', async () => {
       const res = await response(completed_workout_object, token);
       const completed_workout = await CompletedWorkout.findOne({ where: { userId: user.id }});
+      const completed_exercise = await CompletedExercise.findOne({
+        where: { completedWorkoutId: completed_workout.id }
+      });
 
       expect(completed_workout).toHaveProperty('id');
       expect(completed_workout).toHaveProperty('date', completed_workout_object.date);
       expect(completed_workout).toHaveProperty('userId', user.id);
+      expect(completed_exercise).toHaveProperty('exerciseId', exercise.id);
+      expect(completed_exercise).toHaveProperty('exercise_type', 'cable');
+      expect(completed_exercise).toHaveProperty('sets', 0);
+      expect(completed_exercise).toHaveProperty('reps', 0);
+      expect(completed_exercise).toHaveProperty('completedWorkoutId', completed_workout.id);
     });
 
     it('should return completed workout if completed workout is valid', async () => {
