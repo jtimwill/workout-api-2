@@ -45,6 +45,8 @@ router.post('/', auth, async (req, res) => {
         exercise_type: te.exercise_type,
         sets: 0,
         reps: 0,
+        load: te.load,
+        unilateral: te.unilateral,
         completedWorkoutId: completed_workout.id
       });
     }

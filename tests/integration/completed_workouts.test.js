@@ -135,7 +135,14 @@ describe('/api/completed_workouts', () => {
       };
 
       await TargetExercise.bulkCreate([
-        { exerciseId: exercise.id, exercise_type: 'cable', sets: 4, reps: 8, workoutId: workout.id },
+        { exerciseId: exercise.id,
+          exercise_type: 'cable',
+          sets: 4,
+          reps: 8,
+          load: 100,
+          unilateral: true,
+          workoutId: workout.id
+        },
       ]);
     });
 
@@ -174,6 +181,8 @@ describe('/api/completed_workouts', () => {
       expect(completed_exercise).toHaveProperty('exercise_type', 'cable');
       expect(completed_exercise).toHaveProperty('sets', 0);
       expect(completed_exercise).toHaveProperty('reps', 0);
+      expect(completed_exercise).toHaveProperty('load', 100);
+      expect(completed_exercise).toHaveProperty('unilateral', true);
       expect(completed_exercise).toHaveProperty('completedWorkoutId', completed_workout.id);
     });
 
