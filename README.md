@@ -64,7 +64,10 @@ Additional resources that helped me:
   * https://stackoverflow.com/questions/50171932/run-jest-test-suites-in-groups
 * Node Environment Variables:
   * https://stackoverflow.com/questions/9198310/how-to-set-node-env-to-production-development-in-os-x
-
+* Old Personal Projects
+  * https://github.com/jtimwill/diet-api
+  * https://github.com/jtimwill/workout-api
+  
 ## App Structure
 <p align="center">
   <img alt="Image of App Structure" src="https://raw.githubusercontent.com/jtimwill/workout-api-2/master/images/workout-api-diagram.png" />
