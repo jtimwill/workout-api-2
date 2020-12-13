@@ -8,7 +8,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false
     }
   }, {});
